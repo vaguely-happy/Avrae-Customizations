@@ -48,9 +48,9 @@ args = &ARGS&
 parsed = argparse(args)
 ch = character()
 
-STAT_BLOCKS = load_yaml(get_gvar("a99036e7-d4d8-4492-b82a-f11bed9d43ec"))
-COMPANIONS = ["dancing", "drake", "homunculus", "land", "sea", "sky", "steel", "wildfire"]
-SUMMON_LIST = ["aberration", "beast", "blighted", "celestial", "construct", "dancing", "draconic", "drake", "elemental", "fey", "demon", "homunculus", "primal", "land", "sea", "sky", "reaper", "shadowspawn", "steel", "undead", "wildfire"]
+STAT_BLOCKS = load_yaml(get_gvar("aa1c4b63-7f6f-4786-9b92-985bd17e1d82"))
+COMPANIONS = ["dancing", "drake", "homunculus", "land", "sea", "sky", "steed", "steel", "wildfire"]
+SUMMON_LIST = ["aberration", "beast", "blighted", "celestial", "construct", "dancing", "draconic", "drake", "elemental", "fey", "demon", "homunculus", "insect", "primal", "land", "sea", "sky", "reaper", "shadowspawn", "steel", "undead", "wildfire"]
 
 SAVE_LIST = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 
