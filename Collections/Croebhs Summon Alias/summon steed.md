@@ -1,11 +1,11 @@
-Giant Insect - `!summon insect <type> [args]` 
+Find Steed - `!summon steed <type> [args]` 
 
-Summons a Giant Insect with the Giant Insect spell.
+Summons a paladin steed with the Find Steed spell.
  
 **Types**
-`spider`
-`centipede`
-`wasp`
+`celestial`
+`fey`
+`fiend`
 
 **Arguments**
 `-l [#]` to set the spell level. Defaults to 4
