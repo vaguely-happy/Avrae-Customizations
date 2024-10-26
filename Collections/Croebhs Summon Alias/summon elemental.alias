@@ -37,26 +37,29 @@ stat_block = {
   "immune":       ["poison"]
 }
 
-attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 4 + {spell_level} [bludgeoning]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 4 + the spell's level bludgeoning damage (Air, Earth, and Water only) or fire damage (Fire only)."}],"_v":2}]
+attacks = []
 extra_effects = []
 match summon_type:
   case "air":
     summon_name = "Air"
+    attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 4 + {spell_level} [lightning]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Attack Roll:* Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d10 + 4 + the spell’s level Bludgeoning (Earth only), Cold (Water only), Lightning (Air only), or Fire (Fire only) damage."}],"_v":2}]
     stat_block['resist'] = ['lighting', 'thunder']
     attacks.extend([])
     extra_effects.extend([])
   case "earth":
     summon_name = "Earth"
+    attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 4 + {spell_level} [bludgeoning]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Attack Roll:* Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d10 + 4 + the spell’s level Bludgeoning (Earth only), Cold (Water only), Lightning (Air only), or Fire (Fire only) damage."}],"_v":2}]
     stat_block['resist'] = ['piercing', 'slashing']
     attacks.extend([])
     extra_effects.extend([])
   case "fire":
     summon_name = "Fire"
+    attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 4 + {spell_level} [fire]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Attack Roll:* Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d10 + 4 + the spell’s level Bludgeoning (Earth only), Cold (Water only), Lightning (Air only), or Fire (Fire only) damage."}],"_v":2}]
     stat_block['immune'].append('fire')
-    attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 4 + {spell_level} [fire]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 4 + the spell's level bludgeoning damage (Air, Earth, and Water only) or fire damage (Fire only)."}],"_v":2}]
     extra_effects.extend([])
   case "water":
     summon_name = "Water"
+    attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 4 + {spell_level} [cold]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Attack Roll:* Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d10 + 4 + the spell’s level Bludgeoning (Earth only), Cold (Water only), Lightning (Air only), or Fire (Fire only) damage."}],"_v":2}]
     stat_block['resist'] = ['acid']
     attacks.extend([])
     extra_effects.extend([])
