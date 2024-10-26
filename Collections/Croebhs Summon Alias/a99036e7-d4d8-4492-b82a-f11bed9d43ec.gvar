@@ -104,6 +104,14 @@
             "perception"
         ]
     },
+    "insect": {
+        "str":17,
+        "dex":13,
+        "con": 15,
+        "int": 4,
+        "wis": 14,
+        "cha": 3
+    },
     "land": {
         "str":14,
         "dex":14,
@@ -248,6 +256,14 @@
         "int": 4,
         "wis": 10,
         "cha": 16
+    },
+    "steed": {
+        "str":18,
+        "dex":12,
+        "con": 14,
+        "int": 6,
+        "wis": 12,
+        "cha": 8
     },
     "steel": {
         "str":14,
