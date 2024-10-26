@@ -39,7 +39,7 @@ stat_block = {
   "type": "beast",
 }
 
-attacks = [{"name":"Maul","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 4 + {spell_level} [piercing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level piercing damage."}],"_v":2}]
+attacks = [{"name":"Rend","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 4 + {spell_level} [piercing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Attack Roll:* Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d8 + 4 + the spell’s level Piercing damage."}],"_v":2}]
 extra_effects = []
 match summon_type:
   case "air":
@@ -48,10 +48,10 @@ match summon_type:
     effects = [{"name": "Flyby", "desc": "The beast doesn’t provoke opportunity attacks when it flies out of an enemy’s reach."}]
   case "land":
     summon_name = "Land"
-    effects = [{"name": "Pact Tactics", "desc": "Advantage on an attack rolls against creatures if an ally is within 5 ft"}]
+    effects = [{"name": "Pack Tactics", "desc": "he spirit has Advantage on an attack roll against a creature if at least one of the spirit’s allies is within 5 feet of the creature and the ally doesn’t have the Incapacitated condition."}]
   case "water":
     summon_name = "Water"
-    effects = [{"name": "Pact Tactics", "desc": "Advantage on an attack rolls against creatures if an ally is within 5 ft"}]
+    effects = [{"name": "Pack Tactics", "desc": "he spirit has Advantage on an attack roll against a creature if at least one of the spirit’s allies is within 5 feet of the creature and the ally doesn’t have the Incapacitated condition.}]
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nSelect from Air, Land, or Water." """
 
