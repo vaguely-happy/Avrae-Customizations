@@ -48,10 +48,10 @@ match summon_type:
     effects = [{"name": "Flyby", "desc": "The beast doesn’t provoke opportunity attacks when it flies out of an enemy’s reach."}]
   case "land":
     summon_name = "Land"
-    effects = [{"name": "Pack Tactics", "desc": "he spirit has Advantage on an attack roll against a creature if at least one of the spirit’s allies is within 5 feet of the creature and the ally doesn’t have the Incapacitated condition."}]
+    effects = [{"name": "Pack Tactics", "desc": "The spirit has Advantage on an attack roll against a creature if at least one of the spirit’s allies is within 5 feet of the creature and the ally doesn’t have the Incapacitated condition."}]
   case "water":
     summon_name = "Water"
-    effects = [{"name": "Pack Tactics", "desc": "he spirit has Advantage on an attack roll against a creature if at least one of the spirit’s allies is within 5 feet of the creature and the ally doesn’t have the Incapacitated condition.}]
+    effects = [{"name": "Pack Tactics", "desc": "The spirit has Advantage on an attack roll against a creature if at least one of the spirit’s allies is within 5 feet of the creature and the ally doesn’t have the Incapacitated condition."}]
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nSelect from Air, Land, or Water." """
 
