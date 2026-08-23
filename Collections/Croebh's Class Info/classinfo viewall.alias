@@ -1,0 +1,32 @@
+embed <drac2>
+def merge_dicts(dict1, dict2):
+  for class_name, details in dict2.items():
+    if class_name in dict1:
+      dict1[class_name]["sub_level"] = details.get("sub_level", dict1[class_name]["sub_level"])
+      dict1[class_name]["hit_die"] = details.get("hit_die", dict1[class_name]["hit_die"])
+      dict1[class_name]["subclasses"].extend(details.get("subclasses", []))
+    else:
+      dict1[class_name] = details
+  return dict1
+
+classes = load_json(get_gvar("a53f12b4-bd1d-40d7-844f-9403a7dc5246"))
+
+server_classes = load_json(get_svar('class_info', '{}'))
+classes = merge_dicts(classes, server_classes)
+
+uvar_classes = load_json(get_uvar('class_info', '{}'))
+classes = merge_dicts(classes, uvar_classes)
+
+cvar_classes = load_json(get('class_info', '{}'))
+if str(uvar_classes) != str(cvar_classes):
+  classes = merge_dicts(classes, cvar_classes)
+
+n = "\n"
+out = []
+for cls, info in classes.items():
+  out.append(f""" -f "{cls}|{n.join(info.subclasses)}|inline" """)
+
+return n.join(out)
+</drac2>
+-title "Available Subclasses"
+-footer "{{ctx.prefix}}{{ctx.alias}} viewall"

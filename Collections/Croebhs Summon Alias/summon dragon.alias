@@ -1,0 +1,99 @@
+<drac2>
+TYPE = "Draconic Spirit"
+SPELL_NAME = "Summon Dragon"
+SPELL_DESC = "You call forth a Dragon spirit. It manifests in an unoccupied space that you can see within range and uses the **Draconic Spirit** stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends.\n\nThe creature is an ally to you and your allies. In combat, the creature shares your Initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its movement to avoid danger."
+MIN_LEVEL = 5
+
+using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
+
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+true, false, null = True, False, None
+
+warlock = ch.levels.get('Warlock')
+min_slot = max(MIN_LEVEL, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+spell_level = args.last('l', min_slot, int)
+summon_type = args.last('type', "", str).lower()
+ignore  = args.last('i')
+
+stat_block = {
+  "hp": 10 * spell_level,
+  "ac": 14 + spell_level,
+  "pb": proficiencyBonus,
+  "strength": 19,
+  "dexterity": 14,
+  "constitution": 17,
+  "intelligence": 10,
+  "wisdom": 14,
+  "charisma": 14,
+  "type": "dragon",
+  "resist": [
+    "acid",
+    "cold",
+    "fire",
+    "lightning",
+    "poison",
+  ]
+}
+
+attacks = [{"name":"Rend","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d6 + 4 + {spell_level} [piercing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 10 ft., one target. *Hit:* 1d6 + 4 + the spell's level piercing damage."}],"_v":2},{"name":"Breath Weapon","automation":[{"type":"roll","dice":"2d6 [{{choice if caster.resistances.is_resistant(choice) else 'draconic'}}]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"dex","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[{"type":"damage","damage":"({damage})/2"}]}]},{"type":"text","text":"_Dexterity Saving Throw:_ DC equals your spell save DC, each creature in a 30-foot Cone. _Failure:_ 2d6 damage of a type this spirit has Resistance to (your choice when you cast the spell). _Success:_ Half damage."},{"type":"condition","condition":"not caster.resistances.is_resistant(choice)","onTrue":[{"type":"text","text":"You didn't select an appropriate damage type with `-choice [type]`. Please select one that is available for this summon."}],"onFalse":[],"errorBehaviour":"false"}],"_v":2,"verb":"unleashes their","proper":True},{"name":"Shared Resistances","automation":[{"type":"target","target":"self","effects":[{"type":"ieffect2","name":"Sharing Resistances","save_as":"shared"}]},{"type":"target","target":"each","effects":[{"type":"ieffect2","name":"Shared Resistances","effects":{"resistances":["{{choice if caster.resistances.is_resistant(choice) else 'draconic'}}"]},"parent":"shared"}]},{"type":"text","text":"When you summon the dragon, choose one of its damage resistances. You have resistance to the chosen damage type until the spell ends."},{"type":"condition","condition":"not caster.resistances.is_resistant(choice)","onTrue":[{"type":"text","text":"You didn't select an appropriate damage type with `-choice [type]`. Please select one that is available for this summon."}],"onFalse":[],"errorBehaviour":"false"}],"_v":2,"verb":"begins to","proper":True,"activation_type":8}]
+extra_effects = []
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
+  ch.spellbook.use_slot(spell_level)
+
+summon_name = "Dragon"
+custom_names = load_yaml(get('summon_names', '{}'))
+s_name = args.last('name')
+if s_name == 'reset':
+  custom_names.pop(summon_name, None)
+elif s_name:
+  custom_names[summon_name] = s_name
+ch.set_cvar('summon_names', dump_yaml(custom_names))
+s_name = custom_names.get(summon_name, f"Summoned {summon_name} {TYPE} ({init_add.get_initials(name)})")
+
+group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+
+stat_block['p'] = True
+stat_block['group'] = group_name
+stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
+
+choice = args.last('choice', '').lower()
+passive = {}
+if choice:
+  choice = [i for i in stat_block['resist'] if choice in i] + [choice]
+  passive = {"resistances": choice[:1]}
+
+c.me.set_group(group_name)
+useconc = "noconc" not in args
+usedur = int(args.get("dur",[600])[0])
+c.me.add_effect(f"Summon {TYPE}", concentration=useconc, duration=usedur, passive_effects=passive)
+
+embed_args = {
+  "title": f"{name} summoned a {summon_name} {TYPE}!",
+  "desc": SPELL_DESC,
+  "fields": [{"title": "Spell Slots", "desc": f"{ch.spellbook.slots_str(spell_level)} {'(-1)' if not ignore else ''}"}],
+  "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+  "color": color,
+  "thumb": image
+}
+
+summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
+embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon {TYPE}", extra_effects=extra_effects)
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+</drac2>

@@ -13,7 +13,7 @@ output =  f"""-title "{combatTarget.name if combatTarget else target} Readies an
 -thumb {image if "&1"+"&"=="&1&" else ""}
 -color {color} """ + \
 (f""" -f "{combatTarget.name}|**Effect**: {str(combatTarget.get_effect("Readying an Action")).splitlines()[0]}" """  if combatTarget else "") + \
-(f""" -f "Trigger and Action|&*&" """ if "&*&" else "")
+(f""" -f 《Trigger and Action|&*&》 """ if "&*&" else "")
 
 return output
 </drac2>

@@ -13,7 +13,12 @@
       "Wild Magic",
       "Giant",
       "Juggernaut",
-      "World Tree"
+      "World Tree",
+      "Experiment",
+      "Fractured",
+      "Muscle Wizard",
+      "Spell Scorned",
+      "Wrathful Dead"
     ]
   },
   "Bard":{
@@ -28,7 +33,13 @@
       "Eloquence",
       "Creation",
       "Tragedy",
-      "Dance"
+      "Dance",
+      "Moon",
+      "Adventurers",
+      "Drama",
+      "Fools",
+      "Requiems",
+      "Whistles"
     ]
   },
   "Cleric":{
@@ -50,7 +61,12 @@
       "Twilight",
       "Peace",
       "Blood",
-      "Moon"
+      "Moon",
+      "Apocalypse",
+      "Eldritch",
+      "Harvest",
+      "Inquisition",
+      "Purification"
     ]
   },
   "Druid":{
@@ -65,7 +81,13 @@
       "Wildfire",
       "Stars",
       "Blighted",
-      "Sea"
+      "Sea",
+      "Blood",
+      "Entropy",
+      "Mutation",
+      "Old Ways",
+      "Symbiote",
+      "Wicker"
     ]
   },
   "Fighter":{
@@ -82,7 +104,13 @@
       "Gunslinger",
       "Echo Knight",
       "Rune Knight",
-      "Psi Warrior"
+      "Psi Warrior",
+      "Barrow Guard",
+      "Bulwark Warrior",
+      "Dungeoneer",
+      "Hero",
+      "Living Crucible",
+      "Nightwatcher"
     ]
   },
   "Monk":{
@@ -99,7 +127,13 @@
       "Cobalt Soul",
       "Astral Self",
       "Mercy",
-      "Ascendant Dragon"
+      "Ascendant Dragon",
+      "Street",
+      "Pestilent Haze",
+      "Leaden Crown",
+      "Regret",
+      "Pride",
+      "Cosmic Balance"
     ]
   },
   "Paladin":{
@@ -115,7 +149,14 @@
       "Redemption",
       "Glory",
       "Open Sea",
-      "Watchers"
+      "Watchers",
+      "Noble Genies",
+      "Castigation",
+      "Pestilence",
+      "Revelry",
+      "Slaughter",
+      "Guardian",
+      "Zeal"
     ]
   },
   "Ranger":{
@@ -129,7 +170,13 @@
       "Monster Slayer",
       "Swarmkeeper",
       "Fey Wanderer",
-      "Drakewarden"
+      "Drakewarden",
+      "Winter Walker",
+      "Green Reaper",
+      "Grim Harbinger",
+      "Primordial Archer",
+      "Trail Warden",
+      "Vermin Lord"
     ]
   },
   "Rogue":{
@@ -144,7 +191,14 @@
       "Inquisitive",
       "Scout",
       "Soulknife",
-      "Phantom"
+      "Phantom",
+      "Scion of the Three",
+      "Arachnoid Stalker",
+      "Highway Rider",
+      "Misfortune Bringer",
+      "Sanguine Thief",
+      "Shadow Stalker",
+      "Sinner"
     ]
   },
   "Sorcerer":{
@@ -159,7 +213,13 @@
       "Clockwork",
       "Aberrant",
       "Lunar",
-      "Runechild"
+      "Runechild",
+      "Wretched Bloodline",
+      "Hungering Dark",
+      "Haunted",
+      "Crimson",
+      "Apocalypse",
+      "Spellfire"
     ]
   },
   "Warlock":{
@@ -174,7 +234,14 @@
       "Hexblade",
       "Genie",
       "Fathomless",
-      "Undead"
+      "Undead",
+      "Coven",
+      "First Vampire",
+      "Parasite",
+      "Horned King",
+      "Great Fool",
+      "Future You",
+      "Exalted Assembly of the Feline Court"
     ]
   },
   "Wizard":{
@@ -194,7 +261,13 @@
       "Chronurgy Magic",
       "Graviturgy Magic",
       "Order of Scribes",
-      "Blood Magic"
+      "Blood Magic",
+      "Sangromancer",
+      "Plague Doctor",
+      "Philosopher",
+      "Occultist",
+      "Daemonologist",
+      "Bibliomancer"
     ]
   },
   "Artificer":{
@@ -204,7 +277,8 @@
       "Alchemist",
       "Armorer",
       "Artillerist",
-      "Battle Smith"
+      "Battle Smith",
+      "Cartographer"
     ]
   },
   "Blood Hunter":{

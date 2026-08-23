@@ -21,6 +21,7 @@ __**Valid Arguments: Basics**__
 `-criton <#>` - This attack crits on a number other than a natural 20. (Only works for personal attacks)
 `-c <extra crit damage>` - How much extra damage (beyond doubling dice) this attack does on a crit. (Only works for personal attacks)
 `-dtype <damage type>` - Changes the damage type of the weapon (Useful for a True Strike attack for example)
+`-desc <desc>` - Add additional text to the description of the weapon
 
 __**Valid Arguments: Fighting Styles**__
 `archery` - applies the Archery Fighting Style (use only for ranged weapons)
