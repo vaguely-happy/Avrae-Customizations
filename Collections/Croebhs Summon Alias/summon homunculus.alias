@@ -1,5 +1,7 @@
 <drac2>
-FEATURE_DESC = "The homunculus is friendly to you and your companions, and it obeys your commands. See this creature's game statistics in the Homunculus Servant stat block, which uses your proficiency bonus (PB) in several places.\n\nIn combat, the homunculus shares your initiative count, but it takes its turn immediately after yours. It can move and use its reaction on its own, but the only action it takes on its turn is the Dodge action, unless you take a bonus action on your turn to command it to take another action. That action can be one in its stat block or some other action. If you are incapacitated, the homunculus can take any action of its choice, not just Dodge."
+v2014 = character().csettings['version']=='2014' if ctx.guild.servsettings()['allow_character_override'] else ctx.guild.servsettings()['version']=='2014'
+
+FEATURE_DESC = "The homunculus is friendly to you and your companions, and it obeys your commands. See this creature's game statistics in the Homunculus Servant stat block, which uses your proficiency bonus (PB) in several places.\n\nIn combat, the homunculus shares your initiative count, but it takes its turn immediately after yours. It can move and use its reaction on its own, but the only action it takes on its turn is the Dodge action, unless you take a bonus action on your turn to command it to take another action. That action can be one in its stat block or some other action. If you are incapacitated, the homunculus can take any action of its choice, not just Dodge.\n-# \\- TCoE" if v2014 else "You summon a special homunculus in an unoccupied space within range. This creature uses the Homunculus Servant stat block. If you already have a homunculus from this spell, the homunculus is replaced by the new one. You determine the homunculus’s appearance, such as a mechanical-looking bird, winged vial, or miniature animate cauldron.\n\n**Combat**\nThe homunculus is an ally to you and your allies. In combat, it shares your Initiative count, but it takes its turn immediately after yours. It obeys your commands (no action required by you). If you don’t issue any, it takes the Dodge action and uses its movement to avoid danger.\n-# \\- EFotA"
 
 using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
 
@@ -13,17 +15,44 @@ sdc = ch.spellbook.dc
 true, false, null = True, False, None
 
 artificer = ch.levels.get('Artificer')
-if not( artificer >= 2 or ignore):
+if v2014 and not (artificer >= 2 or ignore):
   return f"""embed -title "Woopsie!" -desc "You're not an Artificer of sufficient level!" """
 
-if ignore:
+if ignore and not artificer:
   artificer = level  # University Artificers hate this one trick
 
 if not (c and c.me):
   return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
 
+
+# it's a spell now not just a classfeature
+
+spell_fields = []
+spell_level = 2
+extra_effects = []  # move this up here before our versioning
+
+if not v2014:
+  spell_level = min(9, max(2, args.last('l', 2, int)))
+  can_cast = ignore or ch.spellbook.get_slots(spell_level)
+  if not can_cast:
+    all_slots = "\n".join([f"{ch.spellbook.slots_str(x)}" for x in range(1,10) if ch.spellbook.get_max_slots(x)])
+    return f"""embed -title "Woopsie!" -desc "You don't seem to have any level {spell_level} slots to cast this spell!" -f "Spell Slots|{all_slots}" """
+  else:
+    ignore or ch.spellbook.use_slot(spell_level)
+    slotDisplay = f'{ch.spellbook.slots_str(spell_level)} {"*use ignored*" if ignore else "(-1)"}'
+    spell_fields.append({"title": f'''Spell Slots''', "desc": f'''{slotDisplay}'''})
+    extra_effects = [{
+                      "name": "Magic Bond",
+                      "desc": "Add the spell's level to any ability check or saving throw the homunculus makes.",
+                      "passive": {
+                                  "save_bonus": f"{spell_level} [magic bond]",
+                                  "check_bonus": f"{spell_level} [magic bond]"
+                                  }
+                      }]
+
+
 stat_block = {
-  "hp": 1 + intelligenceMod + artificer,
+  "hp": (1 + intelligenceMod + artificer) if v2014 else (5 + 5*spell_level),
   "ac": 13,
   "pb": proficiencyBonus,
   "strength": 4,
@@ -33,15 +62,16 @@ stat_block = {
   "wisdom": 10,
   "charisma": 7,
   "type": "construct",
-  "save": ["dex"],
-  "prof": ["stealth"],
-  "exp": ["perception"],
+  "save": ["dex"] if v2014 else [],
+  "prof": ["stealth"] if v2014 else [],
+  "exp": ["perception"] if v2014 else [],
   "immune": ["poison"]
 }
 
+attack_desc = "*Ranged Weapon Attack:* your spell attack modifier to hit, range 30 ft., one target you can see. *Hit:* 1d4 + PB force damage." if v2014 else "*Melee or Ranged Attack Roll:* Bonus equals your spell attack modifier, reach 5 ft. or range 30 ft. Hit: 1d6 plus the spell's level Force damage."
 summon_name = "Homunculus Servant"
-attacks = [{"name":"Force Strike","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d4 + {proficiencyBonus} [force]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Weapon Attack:* your spell attack modifier to hit, range 30 ft., one target you can see. *Hit:* 1d4 + PB force damage."}],"_v":2},{"name":"Channel Magic","automation":[{"type":"text","text":"The homunculus delivers a spell you cast that has a range of touch. The homunculus must be within 120 feet of you."}],"_v":2,"verb":"uses","proper":true,"activation_type":4}]
-extra_effects = []
+
+attacks = [{"name":"Force Strike","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d4 + {proficiencyBonus if v2014 else spell_level} [force]"}],"miss":[],"adv":"0"}]},{"type":"text","text":attack_desc}],"_v":2},{"name":"Channel Magic","automation":[{"type":"text","text":"The homunculus delivers a spell you cast that has a range of touch. The homunculus must be within 120 feet of you."}],"_v":2,"verb":"uses","proper":true,"activation_type":4}]
 
 custom_names = load_yaml(get('summon_names', '{}'))
 s_name = args.last('name')
@@ -63,7 +93,7 @@ c.me.set_group(group_name)
 embed_args = {
   "title": f"{name} summoned their {summon_name}!",
   "desc": FEATURE_DESC,
-  "fields": [],
+  "fields": [] + spell_fields,
   "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
   "color": color,
   "thumb": image
