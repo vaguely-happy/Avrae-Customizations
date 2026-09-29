@@ -67,6 +67,44 @@ elif s_name:
 ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"Summoned {summon_name} {TYPE} ({init_add.get_initials(name)})")
 
+# Build Dreadful Scream after resolving the generated or custom summon name.
+frightened_effect = {
+  "type": "ieffect2",
+  "name": f"Frightened of {s_name}",
+  "duration": 10,
+  "end": true,
+  "effects": {"attack_advantage": -1, "check_dis": ["all"]},
+  "desc": f"Frightened of {s_name}. You have disadvantage on attack rolls and ability checks while {s_name} is within line of sight, and you cannot willingly move closer to it. At the end of each of your turns, use the Repeat Wisdom Save button; a success ends this effect. The disadvantages are applied automatically while this effect is active; adjust rolls manually if the spirit is out of sight.",
+  "buttons": [{
+    "label": "Repeat Wisdom Save",
+    "verb": "repeats the save against Dreadful Scream",
+    "style": 1,
+    "defaultDC": sdc,
+    "automation": [{
+      "type": "target",
+      "target": "self",
+      "effects": [{
+        "type": "save",
+        "stat": "wis",
+        "dc": sdc,
+        "fail": [],
+        "success": [{"type": "remove_ieffect"}]
+      }]
+    }]
+  }]
+}
+attacks[1]["automation"].insert(1, {
+  "type": "target",
+  "target": "each",
+  "effects": [{
+    "type": "save",
+    "stat": "wis",
+    "dc": sdc,
+    "fail": [frightened_effect],
+    "success": []
+  }]
+})
+
 group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
 
 stat_block['p'] = True
@@ -74,7 +112,9 @@ stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
 c.me.set_group(group_name)
-c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+useconc = "noconc" not in args
+usedur = int(args.get("dur",[600])[0])
+c.me.add_effect(f"Summon {TYPE}", concentration=useconc, duration=usedur)
 
 embed_args = {
   "title": f"{name} summoned a {summon_name} {TYPE}!",
